@@ -7,42 +7,42 @@ Change connection string in the appsettings.json to your database connection
 
 # AdvanceReportViews
 
-CREATE TABLE [dbo].[AdvanceReportViews](
+   CREATE TABLE [dbo].[AdvanceReportViews](
 	[ReportViewId] [int] IDENTITY(1,1) NOT NULL,
 	[ViewName] [nvarchar](250) NOT NULL,
 	[ViewFriendlyName] [nvarchar](250) NOT NULL,
 	[IsValid] [bit] NOT NULL,
- CONSTRAINT [PK_Advance_ReportViews] PRIMARY KEY CLUSTERED 
-(
+  CONSTRAINT [PK_Advance_ReportViews] PRIMARY KEY CLUSTERED 
+   (
 	[ReportViewId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
-)
+   )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+   )
 
-GO
+   GO
 
 # AdvanceSavedReports
 
-CREATE TABLE [dbo].[AdvanceSavedReports](
+  CREATE TABLE [dbo].[AdvanceSavedReports](
 	[ReportId] [int] IDENTITY(1,1) NOT NULL,
 	[ReportName] [nvarchar](250) NOT NULL,
 	[ReportDesc] [nvarchar](250) NULL,
 	[ReportType] [nvarchar](50) NULL,
 	[ReportData] [nvarchar](max) NOT NULL,
-	[SavedDateUTC] [datetime] NOT NULL,
- CONSTRAINT [PK_Advance_SavedReports] PRIMARY KEY CLUSTERED 
-(
+ 	[SavedDateUTC] [datetime] NOT NULL,
+   CONSTRAINT [PK_Advance_SavedReports] PRIMARY KEY CLUSTERED 
+   (
 	[ReportId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
-)
+   )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+   )
 
-GO
+  GO
 
 # Store Procedure
 
-Create PROCEDURE [dbo].[GetTableSchema]
+ Create PROCEDURE [dbo].[GetTableSchema]
 	@p1 NVARCHAR(256) 
-AS
-BEGIN
+ AS
+ BEGIN
 	SET NOCOUNT ON;
 
 	SELECT 
@@ -52,5 +52,5 @@ BEGIN
 		INFORMATION_SCHEMA.COLUMNS
 	WHERE 
 		TABLE_NAME  = @p1
-END
-GO
+ END
+ GO
