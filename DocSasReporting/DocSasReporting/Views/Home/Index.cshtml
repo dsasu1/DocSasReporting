@@ -1,0 +1,356 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="panel panel-default" style="min-height: 500px; margin-top:10px; display:none;" data-bind="visible:true">
+  
+    <asp:HiddenField runat="server" id="hdnCurrentCsr" ClientIDMode="Static" />
+    <div class="panel-body" data-bind="visible: !ShowingReportResults()">
+        <div class="col-lg-12" id="CreateNewButton" data-bind="visible: showSavedReports">
+            <div class="row">
+                <button class="btn btn-primary pull-right" data-bind="click: createNew">Create New Report</button>
+            </div>
+        </div>
+
+        <div class="col-lg-12" style="padding-top:10px;" data-bind="visible: showSavedReports() && SavedReports().length < 1">
+            <div class="row">
+               No saved Reports
+            </div>
+        </div>
+
+        <div class="col-lg-12" style="padding-top:10px;" id="SavedReports" data-bind="foreach: SavedReports, visible: showSavedReports">
+
+            <div class="list-group-item row">
+                <div class="col-sm-8">
+                    <div class="fa pull-left">
+                        <i class="glyphicon glyphicon-list-alt" data-bind="visible: ReportType =='List'"></i>
+                        <i class="glyphicon  fa fa-bar-chart" data-bind="visible: ReportType =='Bar'"></i>
+                        <i class="glyphicon fa fa-pie-chart" data-bind="visible: ReportType =='Pie'"></i>
+                        <i class="glyphicon fa fa-line-chart" data-bind="visible: ReportType =='Line'"></i>
+                        &nbsp
+                    </div>
+                    <div class="pull-left">
+                        <h4 class="list-group-item-heading" data-bind="text: ReportName"></h4>
+                    </div>
+                    <div class="clearfix"></div>
+                    <p class="list-group-item-text" data-bind="text: ReportDesc"> Description</p>
+                </div>
+                <div class="col-sm-4">
+                    <div class="pull-right">
+                        <br />
+                        <button class="btn btn-sm btn-default" type="button" data-bind="click: $parent.openReport">
+                            <span class="glyphicon glyphicon-edit"></span> &nbsp Edit Report
+
+                        </button>
+                        <button class="btn btn-sm btn-primary" type="button" data-bind="click: $parent.runReport">
+                            <span class="glyphicon glyphicon-dashboard"></span> &nbsp  Run Report
+
+                        </button>
+                        <button class="btn btn-sm btn-danger" type="button" data-bind="click: $parent.deleteReport">
+                            <span class="glyphicon glyphicon-trash"></span> &nbsp  Delete
+
+                        </button>
+                        <br />
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <div class="col-lg-12" style="padding-top: 20px;" id="reportFormStep1" data-bind="visible: reportFormStep1 ">
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="col-lg-6">
+                    <h3 data-bind="text: ReportName, visible: EditMode()"></h3>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom: 10px;">
+
+                <div class="col-lg-6">
+                    <label class="control-label"> Choose Data  for Report</label>
+                    <select class="form-control" data-bind="options: Tables, optionsCaption: 'Choose Data...', optionsText: 'dataFriendlyName', value: SelectedTableId, optionsValue: 'dataId'"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <label class="control-label">Choose Report Type</label>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-6">
+                    <div class="button-box" tabindex="0" data-bind="click: function(){ setReportType('List'); }, css: {active: ReportType()=='List'}">
+                        <span class="glyphicon glyphicon-list-alt"></span>
+                        <p> List</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-3 col-xs-6">
+                    <div class="button-box" tabindex="0" data-bind="click: function(){ setReportType('Bar'); }, css: {active: ReportType()=='Bar'}">
+                        <span class="glyphicon  fa fa-bar-chart"></span>
+                        <p> Bar</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-6">
+                    <div class="button-box" tabindex="0" data-bind="click: function(){ setReportType('Pie'); }, css: {active: ReportType()=='Pie'}">
+                        <span class="glyphicon fa fa-pie-chart"></span>
+                        <p> Pie</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-6">
+                    <div class="button-box" tabindex="0" data-bind="click: function(){ setReportType('Line'); }, css: {active: ReportType()=='Line'}">
+                        <span class="glyphicon fa fa-line-chart"></span>
+                        <p> Line</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row container-fluid" data-bind="visible: ChooseFields().length > 0">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <h5>Check the fields you would like to use in the Report</h5>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="pull-right">
+                                <button class="btn btn-primary btn-xs" type="button" data-bind="click: MoveAllFields">Select all</button>
+                                <button class="btn btn-danger btn-xs" type="button" data-bind="click: RemoveSelectedFields">Remove all</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-12" style="padding-bottom:5px;">
+                    <div class="alert alert-info" data-bind="visible: ReportType()=='Pie'">
+                        <span class="fa fa-lightbulb-o fa-2x"></span> &nbsp; For Pie Graph, the first field selected below will be the label . The Second field selected must result in a numeric.
+                    </div>
+                    <div class="alert alert-info" data-bind="visible: ReportType()=='Bar'">
+                        <span class="fa fa-lightbulb-o fa-2x"></span> &nbsp; For Bar Graph, the first field selected below will show on the x-axis.  All other selected fields will show on y-axis, but they must result in a numeric.
+                    </div>
+                    <div class="alert alert-info" data-bind="visible: ReportType()=='Line'">
+                        <span class="fa fa-lightbulb-o fa-2x"></span> &nbsp; For Line Graph, the first field selected below will show on the x-axis.  All other selected fields will show on y-axis, but they must result in a numeric.
+                    </div>
+                </div>
+            </div>
+            <div class="row container-fluid" data-bind="foreach: ChooseFields">
+
+
+                <div class="col-md-3 col-sm-4 col-xs-6">
+                    <div class="list-group-item">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" data-bind="checkedInArray: { array: $parent.SelectedFields, value: $data }" />
+                                <span data-bind="text: FieldName"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-12" style="padding-top:20px;" id="reportFormStep2" data-bind="visible: SelectedFields().length > 0">
+            <h5><span class=""></span>Selected data for the Report</h5>
+            <div class="row container-fluid">
+
+                <ul class="list-group" data-bind="sortable: { data: SelectedFields, options: { handle: '.sortable', cursor: 'move', placeholder: 'drop-highlight' } }">
+                    <li class="list-group-item">
+                        <span class="fa fa-columns"></span>
+                        <span data-bind="text: FieldName"></span>
+                        <div class="input-group pull-right" style="margin-top: -5px;">
+                            <select class="form-control input-sm" style="width: 120px;" data-bind="options: FieldAggregates, optionsText: 'Title', optionsValue:'Aggregate',  value: SelectedFieldAggr, visible: $parent.isChart"></select>
+                        </div>
+                        <div class="sortable pull-right" style="padding-right: 15px;">
+                            <span class="glyphicon glyphicon-plus" style="cursor: pointer;" title="Drag to reorder"></span>
+                        </div>
+                        <div class="pull-right" style="padding-right: 15px;">
+                            <span class="glyphicon glyphicon-trash" style="cursor: pointer;" data-bind="click: $parent.RemoveField" title="Delete this Field"></span>
+                        </div>
+
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="col-lg-12" id="reportFormStep3" data-bind="visible: SelectedFields().length > 0">
+            <h5><span class="fa fa-filter"></span>Choose filters</h5>
+
+            <div class="row" style="padding: 10px 10px; border-bottom:1px solid #dddddd;" data-bind="visible: Filters().length>0">
+                <div class="col-lg-2">
+
+                </div>
+                <div class="col-lg-3">
+                    <strong>Field</strong>
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+                <div class="col-lg-3">
+                    <strong>Filter</strong>
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+
+            <!-- ko foreach: Filters -->
+            <div class="row" style="padding: 5px 5px; border-bottom:1px solid #dddddd;">
+                <div class="col-lg-2">
+                    <select data-bind="options: $parent.AndOrList,optionsCaption: 'Choose', value: AndOr, visible: $index() > 0" class="form-control"></select>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <select class="form-control" data-bind="options: $root.ChooseFields, optionsText: 'FieldName', valueAllowUnset: true, optionsCaption: 'Please Choose', value: Field"></select>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="form-group">
+                        <select class="form-control" data-bind="options: $parent.OperatorList, optionsText: 'desc', optionsValue: 'symbol', value: Operator"></select>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div data-bind="with: Field" class="form-group">
+                        <!-- ko if: ['isnull','isnotnull'].indexOf($parent.Operator()) == -1 -->
+                        <!-- ko if:  ['date','datetime'].indexOf(FieldType) != -1-->
+                        <input class="form-control" type="text" data-bind="datepicker: $parent.FieldValue" />
+                        <!-- /ko -->
+                        <!-- ko if:  ['varchar','nvarchar'].indexOf(FieldType) != -1-->
+                        <input class="form-control" type="text" data-bind="value: $parent.FieldValue" />
+                        <!-- /ko -->
+                        <!-- ko if:  ['bit'].indexOf(FieldType) != -1-->
+                        <select class="form-control" data-bind="value: $parent.FieldValue">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                        <!-- /ko -->
+                        <!-- ko if: ['int','decimal','money'].indexOf(FieldType) != -1 -->
+
+                        <input class="form-control" type="number" data-bind="value: $parent.FieldValue" />
+                        <!-- /ko -->
+                        <!-- /ko -->
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <button class="btn btn-danger" data-bind="click: $parent.RemoveFilter">Remove</button>
+                </div>
+            </div>
+            <!-- /ko -->
+
+            <div class="row" style="padding: 10px 10px">
+                <div>
+                    <button class="btn btn-primary" data-bind="click: AddFilter">Add Filter</button>
+                </div>
+                <br />
+            </div>
+        </div>
+
+        <div class="col-lg-12" style="padding-top: 20px;" data-bind="visible: SelectedFields().length > 0">
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="col-lg-4">
+                    <label class="ontrol-label">Sort By</label>
+                    <select class="form-control" data-bind="options: SelectedFields, optionsText: 'FieldName', optionsCaption: 'Please Choose', optionsValue: 'FieldName', value: SortByField"></select>
+                </div>
+                <div class="col-lg-2">
+                    <label class="ontrol-label">Sort Type </label>
+                    <select class="form-control" data-bind="options: SortByOrderList, value: SortByOrder"></select>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-12" style="padding-top: 20px;" data-bind="visible:SelectedFields().length > 0">
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="col-lg-6">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" data-bind="checked: showSaveReportForm" /> <strong>Save Report</strong>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12" id="reportFormStep5" data-bind="visible:showSaveReportForm()  && SelectedFields().length > 0">
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="col-lg-6">
+                    <label class="control-label">Report Name</label>
+
+                    <input type="text" class="form-control" data-bind="value: ReportName" />
+
+                </div>
+            </div>
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="col-lg-6">
+                    <label class="control-label">Report Description</label>
+
+                    <textarea class="form-control" rows="3" data-bind="value: ReportDesc"></textarea>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-12" id="reportFormButtons" data-bind="visible: reportFormStep1">
+            <div class="modal-footer">
+                <button class="btn btn-danger" type="button" data-bind="click: cancelReport">Cancel</button>
+                <button class="btn btn-primary" type="button" data-bind="visible: SelectedFields().length > 0, click: runReport">Run Report</button>
+                <button class="btn btn-primary" type="button" data-bind="visible: showSaveReportButton(), click: saveRunReport">Save Run Report</button>
+            </div>
+        </div>
+
+    </div>
+    <div class="panel-body" data-bind="if: showReportLoading()">
+
+        <div class="col-lg-12">
+
+            <div class="row">
+                <div style="text-align:center; margin-top:10%">
+                    Please Wait...<br />
+                    <img src="~/images/ajax-loader.gif" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" data-bind="if: ShowingReportResults() && !showReportLoading()">
+
+        <div class="col-lg-12">
+
+            <div class="row">
+
+                        <span class="pull-right" id="reportbut">
+                            <button class="btn btn-primary" type="button" data-bind="click: cancelReport">Return To Reports</button>
+                            <button class="btn btn-primary" type="button" data-bind="click: backToCurrentReport">Edit Report</button>
+                            <button class="btn btn-primary" type="button" data-bind="click:PrintReport">Print Report</button>
+                            @*<button class="btn btn-primary" type="button" data-bind="click:PrintReport">Get CSV</button>*@
+                        </span>
+            </div>
+
+            <div class="row">
+
+                <h3 data-bind="text: ReportName"></h3>
+
+            </div>
+            <div id="chart_div" class="report-chart" data-bind="visible: $root.isChart"></div>
+            <div class="row" style="margin-top:20px;" data-bind="visible: !$root.isChart()">
+                <div class="table-responsive" style="overflow-x: auto">
+                    <table class="table table-striped dataTable" id="resultTable">
+                        <thead>
+                            <tr data-bind="foreach: SelectedFields">
+                                <th data-bind="text: FieldName"></th>
+
+                            </tr>
+
+                        </thead>
+
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

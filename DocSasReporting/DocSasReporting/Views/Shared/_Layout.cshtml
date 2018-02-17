@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DocSasReporting</title>
+
+    <link rel="stylesheet" href="~/css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/css/dataTable.min.css" />
+    <link rel="stylesheet" href="~/css/site.min.css"  />
+        <style type="text/css">
+        .printbut {
+            display: none;
+        }
+
+        .button-box:hover {
+            color: #37a000;
+            border-bottom-color: #37a000;
+        }
+
+        .button-box .glyphicon {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            font-size: 34px;
+        }
+
+        .button-box.active, .button-box:active, .button-box:focus, .button-box:hover, .row > .col-md-3 > .button-box:active, .row > .col-md-4 > .button-box:active {
+            z-index: 1;
+            outline: none;
+        }
+
+        .button-box.active {
+            color: #37a000;
+            border-bottom-color: #37a000;
+        }
+
+        .button-box {
+            cursor: pointer;
+        }
+
+        .button-box {
+            position: relative;
+            vertical-align: top;
+            text-align: center;
+            min-height: 120px;
+            border-radius: 2px;
+            border: 2px solid #e0e0e0;
+            color: #494949;
+            padding: 18px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+            .button-box.no-padding {
+                min-height: 0px;
+                padding: 0px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                border: none;
+            }
+
+            .report-chart {
+               width: 100%;
+               min-height: 450px;
+             }
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">DocSas Reporting</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                   
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2018 - DocSasReporting</p>
+        </footer>
+    </div>
+
+
+    <script src="~/js/jquery-3.2.1.min.js"></script>
+    <script src="~/js/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="~/js//bootstrap.min.js"></script>
+    <script src="~/js/knockout-3.4.2.js"></script>
+    <script src="~/js/knockout-sortable.min.js"></script>
+    <script src="~/js/dataTable.min.js"></script>
+    <script src="~/js/bootbox.min.js"></script>
+    <script src="~/js/GoogleChart.js"></script>
+    <script src="~/js/advancereport.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var vm = new reportViewModel();
+            vm.init();
+            ko.applyBindings(vm);
+
+
+        });
+
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

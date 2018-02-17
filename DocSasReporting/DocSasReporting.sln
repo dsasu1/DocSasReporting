@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocSasReporting", "DocSasReporting\DocSasReporting.csproj", "{BB1EE0E9-2CDE-4914-97FF-054361670317}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB1EE0E9-2CDE-4914-97FF-054361670317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB1EE0E9-2CDE-4914-97FF-054361670317}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB1EE0E9-2CDE-4914-97FF-054361670317}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB1EE0E9-2CDE-4914-97FF-054361670317}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BB938FFA-AC2F-460A-B21C-D6826D3EAA2F}
+	EndGlobalSection
+EndGlobal
